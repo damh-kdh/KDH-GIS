@@ -12,10 +12,11 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+	
 
 
 	<link rel="stylesheet" href="/leaflet/leaflet.css" />
@@ -34,18 +35,18 @@
 		}
 	</style>
 
-	<style>#map { width: 1300px; height: 850px;}
+	<style>#map { width: 1500px; height: 950px;}
 .info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
 .legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }</style>
 
 <style>
 
-.KDHProject {
+/*.KDHProject {
 border: 1px solid black;
 background-color: rgb(148, 255, 250);
 text-align: center;
 margin: 10px;
-}
+}*/
 
 div.left {
     width: 300px;
@@ -64,7 +65,7 @@ div.right {
 
 div.center {
   margin: 10px;
-  width: 1100px;
+  width: 1500px;
   border: 2px solid #73AD21;
   }
 
@@ -244,7 +245,7 @@ div.center {
 	
 	.KDHProject .column h2 {
 	  margin: 10px 0;
-	  font-size: 15px;
+	  font-size: 22px;
 	  color: #004d40;
 	}
 
@@ -254,6 +255,16 @@ div.center {
     text-align: center;
   }
 }
+
+
+/* Make charts responsive */
+/*canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+}*/
+
+
 	</style>
 
 
@@ -354,6 +365,8 @@ canvas {
 <div class="left">
 	<canvas id="myChart" style="width:250px;height:250px"></canvas><br>
 	<canvas id="myChart1" style="width:250px;height:250px"></canvas><br>
+	<!--<canvas id="myChart"></canvas><br>
+	<canvas id="myChart1"></canvas><br>
 	<!--<img src="images/templeImage1.png" width="300px" height="205px" alt="">-->
 </div>
 
@@ -399,14 +412,14 @@ canvas {
 			<option value="csv/Tumakuru.csv">Tumakuru</option>
 			<option value="csv/Udupi.csv">Udupi</option>
 			<option value="csv/Uttara Kannada.csv">Uttara Kannada</option>
-			<option value="csv/Vijayanagar.csv">Vijayanagar</option>
+			<option value="csv/Vijayanagara.csv">Vijayanagara</option>
 			<option value="csv/Vijayapura.csv">Vijayapura</option>
 			<option value="csv/Yadgir.csv">Yadgir</option>
 		</select>
 	  </div>
 
 
-	<canvas id="myChart2" style="width:280px;height:280px"></canvas><br>
+	<canvas id="myChart2" style="width:300px;height:300px"></canvas><br>
 	<!--<img src="Beneficiary Image.png" width="450px" height="250px" alt="">-->
 
 </div>
@@ -416,9 +429,8 @@ canvas {
 <!--<script type="text/javascript" src="us-states.js"></script>-->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<script type="text/javascript" src="KarnatakaMap.js"></script></script>
-<script type="text/javascript" src="MarkerScript.js"></script>
-<script type="text/javascript" src="Maps/HaveriMap.js"></script>
+<script type="text/javascript" src="KarnatakaMap.js"></script>
+
 
 
 <script type="text/javascript">
@@ -582,6 +594,7 @@ districtControl.addTo(map); // Add it to map only once
   const selectedText = this.options[this.selectedIndex].text;
   districtLabelDiv.innerHTML = `<strong>${selectedText}</strong>`;
   map.setView([15, 75], 7, 19);
+  
 
   // 🧹 Clear previous markers
   csvLayerGroup.clearLayers();
@@ -640,7 +653,17 @@ districtControl.addTo(map); // Add it to map only once
 		  
         }
       });
-    }
+    },
+
+
+
+
+	error: function(err, file, inputElem, reason) {
+    alert("🚧 This Data is under Construction!!.\nWe will update it soon!' or contact Department of Archaeology, Museums and Heritage, Government of Karnataka.");
+    console.error("PapaParse error:", reason || err);
+  }
+
+
   });
 
 
