@@ -416,7 +416,17 @@ canvas {
 			<option value="csv/Vijayapura.csv">Vijayapura</option>
 			<option value="csv/Yadgir.csv">Yadgir</option>
 		</select>
+
+
 	  </div>
+
+
+<div id="controls">
+  <label>
+    <input type="checkbox" id="idhCheckbox" />
+    Indian Digital Heritage (IDH)
+  </label>
+</div>
 
 
 	<canvas id="myChart2" style="width:300px;height:300px"></canvas><br>
@@ -599,6 +609,7 @@ districtControl.addTo(map); // Add it to map only once
   // 🧹 Clear previous markers
   csvLayerGroup.clearLayers();
 
+
   // Load and parse new CSV
   Papa.parse(selectedCSV, {
     download: true,
@@ -646,15 +657,11 @@ districtControl.addTo(map); // Add it to map only once
             direction: "right",
             offset: [10, 0]
           });
-	
-
-
-          csvLayerGroup.addLayer(marker);  // 👈 Add marker to the group
+	          csvLayerGroup.addLayer(marker);  // 👈 Add marker to the group
 		  
         }
       });
     },
-
 
 
 
@@ -674,13 +681,109 @@ districtControl.addTo(map); // Add it to map only once
 	//markerData();
 
 
-
 });
+
 
 // Trigger default selection on page load
 window.addEventListener('DOMContentLoaded', () => {
   districtSelect.dispatchEvent(new Event('change'));
 });
+
+
+
+
+//////////////////////////////////////////////////////
+
+document.getElementById('idhCheckbox').addEventListener('change', function (event) {
+
+
+
+if (event.target.checked) {
+	map.setView([15, 75], 7, 19);
+    Papa.parse('csv/IDH.csv', {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      results.data.forEach(function(row) {
+        const lat = parseFloat(row.Latitude);
+        const lon = parseFloat(row.Longitude);
+
+        if (!isNaN(lat) && !isNaN(lon)) {
+          const icon = L.icon({
+            iconUrl: row.iconUrl || 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+            iconSize: [40, 40],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+          });
+
+          let popupTable = `
+            <div class="popup-content">
+              <h4>${row.Name}</h4>
+              <img src="${row.ImageURL}" alt="${row.Name}" class="popup-img">
+              <table class="popup-table"><tbody>`;
+          
+				for (const key in row) {
+  					if (key === 'PDFLink' && row[key]) {
+    					popupTable += `<tr><td><strong>${key}</strong></td><td><a href="${row[key]}" target="_blank">3D point cloud data and Plan in PDF: open PDF</a></td></tr>`;
+  						} else if (!['ImageURL', 'iconUrl'].includes(key)) {
+    					popupTable += `<tr><td><strong>${key}</strong></td><td>${row[key]}</td></tr>`;
+  					}
+				}
+
+          popupTable += `</tbody></table></div>`;
+
+		  popupTable += `<tr>
+  			<td><strong>Download 3D point Cloud Data</strong></td>
+  			<td><span style="color:blue; text-decoration:underline; cursor:pointer;" onclick="alert('Requested data is more than 5GB!! Migration to Cloud service is under progress. Please conract Department of Archeology, Museums and Heritage (DAMH), Government of Karnataka for 3D point cloud data of Monuments https://archaeology.karnataka.gov.in ')">Click here</span></td>
+			</tr>`;
+
+
+          //const marker = L.marker([lat, lon], { icon: icon }).bindPopup(popupTable);
+		  const marker = L.marker([lat, lon], { icon: icon }).bindPopup(popupTable);
+		  marker.bindTooltip(row.Name, {
+            permanent: true,
+            direction: "right",
+            offset: [10, 0]
+          });
+	         csvLayerGroup.addLayer(marker);  // 👈 Add marker to the group
+		  
+        }
+      });
+    },
+
+
+
+  });
+
+
+  } else {
+        //marker.forEach(marker => map.removeLayer(marker));
+        //marker = [];
+		csvLayerGroup.clearLayers();
+    }
+
+  });
+
+
+
+
+
+///////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </script>
