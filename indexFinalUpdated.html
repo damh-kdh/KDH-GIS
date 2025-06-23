@@ -415,6 +415,7 @@ canvas {
 			<option value="csv/Vijayanagara.csv">Vijayanagara</option>
 			<option value="csv/Vijayapura.csv">Vijayapura</option>
 			<option value="csv/Yadgir.csv">Yadgir</option>
+			<option value="ALL_DISTRICTS">All Districts</option>
 		</select>
 
 
@@ -423,8 +424,8 @@ canvas {
 
 <div id="controls">
   <label>
-    <input type="checkbox" id="idhCheckbox" />
-    India Digital Heritage - Hampi (IDH)
+    <input type="checkbox" id="idhCheckbox" style="transform: scale(2); margin-right: 8px;" />
+    Indian Digital Heritage (IDH)
   </label>
 </div>
 
@@ -439,7 +440,8 @@ canvas {
 <!--<script type="text/javascript" src="us-states.js"></script>-->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<script type="text/javascript" src="KarnatakaMap.js"></script>
+<!--<script type="text/javascript" src="KarnatakaMap.js"></script>-->
+<script type="text/javascript" src="KarnatakaFullMap.js"></script>
 
 
 
@@ -605,11 +607,32 @@ districtControl.addTo(map); // Add it to map only once
   districtLabelDiv.innerHTML = `<strong>${selectedText}</strong>`;
   map.setView([15, 75], 7, 19);
   
-
-  // 🧹 Clear previous markers
+ 
+ // 🧹 Clear previous markers
   csvLayerGroup.clearLayers();
 
+ if (selectedCSV === "ALL_DISTRICTS") {
+      loadAllDistrictCSVFiles();
+    } else {
+      loadCSV(selectedCSV);
+    }
+ // });
 
+  function loadAllDistrictCSVFiles() {
+    const allDistrictCSVFiles = [
+      "csv/Bagalkote.csv", "csv/Ballari.csv", "csv/Belagavi.csv", "csv/Bengaluru_Rural.csv", "csv/Bengaluru Urban.csv",
+      "csv/Bidar.csv", "csv/Chamarajanagara.csv", "csv/Chikkaballapura.csv", "csv/Chikkamagaluru.csv", "csv/Chitradurga.csv",
+      "csv/Dakshina Kannada.csv", "csv/Davanagere.csv", "csv/Dharwad.csv", "csv/Gadag.csv", "csv/Hassan.csv",
+      "csv/Haverii.csv", "csv/Kalaburagi.csv", "csv/Kodagu.csv", "csv/Kolara.csv", "csv/Koppala.csv", "csv/Mandya.csv",
+      "csv/Mysuru.csv", "csv/Raichur.csv", "csv/Ramanagara.csv", "csv/Shivamogga.csv", "csv/Tumakuru.csv", "csv/Udupi.csv",
+      "csv/Uttara Kannada.csv", "csv/Vijayanagara.csv", "csv/Vijayapura.csv", "csv/Yadgir.csv"
+    ];
+
+    allDistrictCSVFiles.forEach(loadCSV);
+  }
+
+ 
+function loadCSV(selectedCSV) {
   // Load and parse new CSV
   Papa.parse(selectedCSV, {
     download: true,
@@ -663,7 +686,7 @@ districtControl.addTo(map); // Add it to map only once
       });
     },
 
-
+  
 
 	error: function(err, file, inputElem, reason) {
     alert("🚧 This Data is under Construction!!.\nWe will update it soon!' or contact Department of Archaeology, Museums and Heritage, Government of Karnataka.");
@@ -681,13 +704,24 @@ districtControl.addTo(map); // Add it to map only once
 	//markerData();
 
 
-});
+}});
+
+
+
+
+//////////////////////////////////////////////////////
+
+
+
 
 
 // Trigger default selection on page load
 window.addEventListener('DOMContentLoaded', () => {
   districtSelect.dispatchEvent(new Event('change'));
 });
+
+
+
 
 
 
